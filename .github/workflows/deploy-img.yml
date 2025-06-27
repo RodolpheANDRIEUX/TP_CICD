@@ -1,0 +1,41 @@
+name: Docker CI/CD vers GHCR
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    name: Build & Push Docker vers GHCR
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: 🛎️ Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: 🐍 Installer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: 📦 Installer les dépendances
+        run: |
+          pip install -r requirements.txt
+
+      - name: ✅ Lancer les tests unitaires
+        run: python -m unittest discover
+
+      - name: 🐳 Se connecter à GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: 🏗️ Build de l’image Docker
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/simplemath:latest .
+
+      - name: 🚀 Push vers GHCR
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/simplemath:latest
