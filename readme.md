@@ -27,5 +27,7 @@ test du dockerfile en local :
 ![img.png](Illustrations/img_6.png)
 ![img_1.png](Illustrations/img_7.png)
 
+### Tout semble fonctioner 
 
+![img.png](Illustrations/img_8.png)
 
