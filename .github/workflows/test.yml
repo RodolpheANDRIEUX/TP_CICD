@@ -1,21 +1,28 @@
-name: Test Unitaire Python
+name: CI Python - Tests et Lint
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  test:
+  test-and-lint:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: 📥 Récupérer le code
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: 🐍 Installer Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt || true
+      - name: 📦 Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run unit tests
+      - name: ✅ Lancer les tests unitaires
         run: python -m unittest discover
+
+      - name: 🔎 Linter le code avec pylint
+        run: |
+          pylint code.py test.py
