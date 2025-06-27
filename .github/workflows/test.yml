@@ -20,9 +20,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: ✅ Lancer les tests unitaires
-        run: python -m unittest discover
+      - name: 🐳 Construire l’image Docker
+        run: docker build -t simplemath .
 
-      - name: 🔎 Linter le code avec pylint
-        run: |
-          pylint code.py test.py
+      - name: ▶️ Lancer les tests via Docker
+        run: docker run --rm simplemath
